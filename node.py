@@ -5,12 +5,17 @@ class Node():
         self.gini = gini
         self.classes_count = count  # pocet zaznamov v danom uzle
         self.classes = classes      # podiel zaznamov v jednotlivych triedach
+        
+
+    # set id of a parent node
+    def set_parent(self, parent_id):
+        self.parent_id = parent_id
 
 
     # set node as a leaf
     def set_as_leaf(self):
-        self.left_id = False
-        self.right_id = False
+        self.left_id = None
+        self.right_id = None
         self.leaf = True
 
 
