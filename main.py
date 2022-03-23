@@ -10,4 +10,10 @@ if __name__ == "__main__":
 
     tv.setup_scene()
 
-    cylinder(pos=vector(0, 0, 0), axis=vector(0, 0.5, 0), radius=3, color=color.red)
+    tv.visualize_tree(my_tree)
+
+    while True:
+        rate(30)
+        k = keysdown()
+        tv.move_camera(k)
+
