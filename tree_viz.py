@@ -26,13 +26,16 @@ def visualize_tree(dt):
         samples_count = dt.nodes_dict[key].classes_count
         #classes = dt.nodes_dict[key].classes
         gini = dt.nodes_dict[key].gini
-        #feature = dt.nodes_dict[key].feature
-        #threshold = dt.nodes_dict[key].threshold
+        if dt.nodes_dict[key].leaf:
+            pass
+        else:
+            feature = dt.nodes_dict[key].feature
+            threshold = dt.nodes_dict[key].threshold
         print("Id:",  node_id, " Depth:", node_depth, " Parent Id:",  parent_id)
         if node_depth == 0:
             a = cylinder(pos=vector(x, y, z), axis=vector(0, 0.5, 0), radius=radius, color=col)
             label(pos=a.pos, text=f'Id: {node_id}\nDepth: {node_depth}\n Parent Id: {parent_id}\n Samples count: {samples_count}\n'
-                  f'Gini: {round(gini, 3)}', color=vector(0, 0, 0),
+                  f'Gini: {round(gini, 3)}\n Feature: {feature}\n Threshold: {threshold}', color=vector(0, 0, 0),
                   linecolor=vector(0, 0, 0), linewidth=3, border=10, yoffset=50, xoffset=xoffset)
 
         if node_depth == 1 and for_testing == 0:
@@ -44,7 +47,7 @@ def visualize_tree(dt):
             a = cylinder(pos=vector(x, y, z), axis=vector(0, 0.5, 0), radius=radius, color=col)
             label(pos=a.pos + vector(-3.5, 0, 0),
                   text=f'Id: {node_id}\nDepth: {node_depth}\n Parent Id: {parent_id}\n Samples count: {samples_count}\n'
-                       f'Gini: {round(gini, 3)}', color=vector(0, 0, 0),
+                       f'Gini: {round(gini, 3)}\nFeature: {feature}\n Threshold: {threshold}', color=vector(0, 0, 0),
                   linecolor=vector(0, 0, 0), linewidth=3, border=10, yoffset=50, xoffset=xoffset)
 
 
