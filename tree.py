@@ -23,6 +23,21 @@ class Tree:
         self.create_nodes()
         self.set_parent_nodes()
         self.feature_importance = self.clf.feature_importances_     # zoznam dolezitosti jednotlivych atributov
+        self.create_mapping()
+
+
+    # create mapping of features and classes
+    def create_mapping(self):
+        columns = ["duration","protocol_type","service","flag","src_bytes","dst_bytes","land","wrong_fragment","urgent","hot","num_failed_logins",
+    "logged_in","num_compromised","root_shell","su_attempted","num_root","num_file_creations","num_shells","num_access_files","num_outbound_cmds",
+    "is_host_login","is_guest_login","count","srv_count","serror_rate","srv_serror_rate","rerror_rate","srv_rerror_rate","same_srv_rate",
+    "diff_srv_rate","srv_diff_host_rate","dst_host_count","dst_host_srv_count","dst_host_same_srv_rate","dst_host_diff_srv_rate","dst_host_same_src_port_rate",
+    "dst_host_srv_diff_host_rate","dst_host_serror_rate","dst_host_srv_serror_rate","dst_host_rerror_rate","dst_host_srv_rerror_rate","label", "last_flag"]
+
+        self.feature_map = {}
+
+        for i, item in enumerate(columns):
+            self.feature_map[i] = item
 
 
     # create sklearn tree with desired depth
@@ -100,6 +115,23 @@ class Tree:
 
         return node_list
         
+
+    # calculates feature importance anf frequency
+    def get_attrib_freq_and_impact(self):
+        features_impact = {}
+        features_freq = {}
+
+        for i, item in enumerate(self.feature_importance):
+            if item > 0:
+                features_impact[i] = item * 100
+                features_freq[i] = 0
+
+        for key in self.nodes_dict:
+            if self.nodes_dict[key].leaf == False:
+                features_freq[self.nodes_dict[key].feature] += 1
+
+        return features_impact, features_freq
+
 
 # loads dataset and creates tree
 def create_tree(type, depth=None):
