@@ -117,11 +117,11 @@ def visualize_tree(dt):
     def by_depth(m):
         global tree_nodes
         for n in tree_nodes:
-            if n[2] >= int(m.selected):
+            if n[2] > int(m.selected):
                 n[0].visible = False
                 n[1].visible = False
             else:
                 n[0].visible = True
                 n[1].visible = True
 
-    menu(choices=['Choose tree depth', '2', '3', '4', '5', '6', '7', '8', '9', '10'], index=0, bind=by_depth)
+    menu(choices=['Vyber hĺbku stromu', '2', '3', '4', '5', '6', '7', '8', '9', '10'], index=0, bind=by_depth)

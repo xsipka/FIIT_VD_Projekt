@@ -11,10 +11,11 @@ def setup_scene(title):
 
 def move_camera(keys):
     if 'left' in keys:
-        scene.camera.pos -= vector(0.5, 0, 0)
+        scene.camera.pos -= vector(0.7, 0, 0)
     if 'right' in keys:
-        scene.camera.pos += vector(0.5, 0, 0)
+        scene.camera.pos += vector(0.7, 0, 0)
     if 'down' in keys:
-        scene.camera.pos += vector(0, 0, 0.5)
+        scene.camera.pos += vector(0, 0, 0.7)
     if 'up' in keys:
-        scene.camera.pos -= vector(0, 0, 0.5)
+        scene.camera.pos -= vector(0, 0, 0.7)
+

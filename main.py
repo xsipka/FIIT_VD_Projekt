@@ -5,18 +5,20 @@ import setup
 from vpython import *
 
 
-
-
 if __name__ == "__main__":
     depth = 10
 
     my_tree = tree.create_tree('file', depth)
 
     setup.setup_scene("Vizualizácia rozhodovacieho stromu\n")
-    #setup.setup_scene("Vplyv a frekvencia atribútov\n")
 
     tv.visualize_tree(my_tree)
-    #av.visualize_attrib_freq_and_impact(my_tree)
+
+    def att_scene():
+        scene2 = canvas(title='Vplyv a frekvencia atribútov\n', width=1200, height=600, background=color.gray(0.9))
+        av.visualize_attrib_freq_and_impact(my_tree)
+
+    button(bind=att_scene, text='Vplyv a frekvencia atribútov')
 
     while True:
         rate(30)
