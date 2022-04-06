@@ -108,7 +108,7 @@ def visualize_attrib_freq_and_impact(tree):
     make_axes(50)
 
     # radio buttons (sorting strategy)
-    default_rb = radio(bind=sort_by, checked=True, text='Deafult\n', i=0, name='Strategy')
+    default_rb = radio(bind=sort_by, checked=True, text='Default\n', i=0, name='Strategy')
     freq_rb = radio(bind=sort_by, text='Sort features by frequency\n', i=1, name='Strategy')
     impact_rb = radio(bind=sort_by, text='Sort features by impact\n', i=2, name='Strategy')
 

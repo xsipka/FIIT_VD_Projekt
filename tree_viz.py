@@ -3,8 +3,11 @@ import tree
 import node
 import dataloader
 
+# to save all nodes for filtering
+tree_nodes = []
 
 def visualize_tree(dt):
+    global tree_nodes
     x, y, z, radius = [0, 0, 0, 2]
     xoffset = 50
     parent_dict = {}
@@ -63,6 +66,11 @@ def visualize_tree(dt):
                 right = dt.nodes_dict[right_id]
                 right_node = cylinder(pos=parent_dict[right.parent_id] + vector(20, 0, -10), axis=vector(0, 1, 0),
                                      radius=radius, color=color.red)
+                label(pos=right_node.pos,
+                      text=f'Id: {right_id}\nDepth: {right.depth}\n Parent Id: {right.parent_id}\n Samples count: {right.classes_count}\n'
+                           f'Gini: {round(right.gini, 3)}', color=vector(0, 0, 0), linecolor=vector(0, 0, 0),
+                      linewidth=3,
+                      border=10, yoffset=50, xoffset=xoffset)
 
                 if not right.leaf:
                     parent_dict[right_id] = right_node.pos
@@ -87,7 +95,7 @@ def visualize_tree(dt):
                         parent_dict[node_id] = new_node.pos
 
                     visualized.append(node_id)
-                    curve(parent_dict[parent_id], new_node.pos)
+                    c = curve(parent_dict[parent_id], new_node.pos)
                     all_left_nodes.append(node_id)
                 else:
                     if parent_id in all_left_nodes:
@@ -101,5 +109,19 @@ def visualize_tree(dt):
                         parent_dict[node_id] = new_node.pos
 
                     visualized.append(node_id)
-                    curve(parent_dict[parent_id], new_node.pos)
+                    c = curve(parent_dict[parent_id], new_node.pos)
                     all_right_nodes.append(node_id)
+
+                tree_nodes.append((new_node, c, node_depth))
+
+    def by_depth(m):
+        global tree_nodes
+        for n in tree_nodes:
+            if n[2] >= int(m.selected):
+                n[0].visible = False
+                n[1].visible = False
+            else:
+                n[0].visible = True
+                n[1].visible = True
+
+    menu(choices=['Choose tree depth', '2', '3', '4', '5', '6', '7', '8', '9', '10'], index=0, bind=by_depth)
