@@ -5,7 +5,7 @@ def setup_scene(title):
     scene.width = 1200
     scene.height = 600
     scene.title = title
-    scene.camera.pos = vector(0, 4, -1)
+    scene.camera.pos = vector(0, 10, 5)
     scene.background = color.gray(0.9)
 
 
