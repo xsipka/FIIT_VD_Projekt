@@ -5,7 +5,7 @@ import numpy as np
 import dataloader as loader
 from node import Node
 
-MAX_DEPTH = 10
+#MAX_DEPTH = 10
 
 
 class Tree:
@@ -13,10 +13,10 @@ class Tree:
         self.x = x
         self.y = y
 
-        if not depth:
-            depth = MAX_DEPTH
-        elif depth > MAX_DEPTH:
-            depth = MAX_DEPTH
+        # if not depth:
+        #     depth = MAX_DEPTH
+        # elif depth > MAX_DEPTH:
+        #     depth = MAX_DEPTH
 
         self.depth = depth
         self.create_sklearn_tree()
@@ -29,15 +29,22 @@ class Tree:
     # create mapping of features and classes
     def create_mapping(self):
         columns = ["duration","protocol_type","service","flag","src_bytes","dst_bytes","land","wrong_fragment","urgent","hot","num_failed_logins",
-    "logged_in","num_compromised","root_shell","su_attempted","num_root","num_file_creations","num_shells","num_access_files","num_outbound_cmds",
-    "is_host_login","is_guest_login","count","srv_count","serror_rate","srv_serror_rate","rerror_rate","srv_rerror_rate","same_srv_rate",
-    "diff_srv_rate","srv_diff_host_rate","dst_host_count","dst_host_srv_count","dst_host_same_srv_rate","dst_host_diff_srv_rate","dst_host_same_src_port_rate",
-    "dst_host_srv_diff_host_rate","dst_host_serror_rate","dst_host_srv_serror_rate","dst_host_rerror_rate","dst_host_srv_rerror_rate","label", "last_flag"]
+            "logged_in","num_compromised","root_shell","su_attempted","num_root","num_file_creations","num_shells","num_access_files","num_outbound_cmds",
+            "is_host_login","is_guest_login","count","srv_count","serror_rate","srv_serror_rate","rerror_rate","srv_rerror_rate","same_srv_rate",
+            "diff_srv_rate","srv_diff_host_rate","dst_host_count","dst_host_srv_count","dst_host_same_srv_rate","dst_host_diff_srv_rate","dst_host_same_src_port_rate",
+            "dst_host_srv_diff_host_rate","dst_host_serror_rate","dst_host_srv_serror_rate","dst_host_rerror_rate","dst_host_srv_rerror_rate","label", "last_flag"]
+
+        classes = ['back', 'buffer_overflow', 'ftp_write', 'guess_passwd', 'imap', 'ipsweep', 'land', 'loadmodule', 'multihop', 'neptune', 'nmap',
+            'normal', 'perl', 'phf', 'pod', 'portsweep', 'rootkit', 'satan', 'smurf', 'spy', 'teardrop', 'warezclient', 'warezmaster']
 
         self.feature_map = {}
+        self.class_map = {}
 
         for i, item in enumerate(columns):
             self.feature_map[i] = item
+        
+        for i, item in enumerate(classes):
+            self.class_map[i] = item
 
 
     # create sklearn tree with desired depth
@@ -144,21 +151,3 @@ def create_tree(type, depth=None):
     tree = Tree(x, y, depth)
 
     return tree
-
-
-# testing if everything ok 
-# data_flow = tree.get_dataflow(24)
-# if data_flow:
-#     for item in data_flow:
-#         print(item.id)
-
-# printing complete tree
-# for key in tree.nodes_dict.keys():
-#     print("Id:",  tree.nodes_dict[key].id, " Depth:", tree.nodes_dict[key].depth, " Parent Id:",  tree.nodes_dict[key].parent_id)
-
-#     if  tree.nodes_dict[key].leaf:
-#         print(tree.nodes_dict[key].id, "is a leaf")
-#     else:
-#         print("Left Id:", tree.nodes_dict[key].left_id, " Right Id:", tree.nodes_dict[key].right_id)
-    
-#     print()
