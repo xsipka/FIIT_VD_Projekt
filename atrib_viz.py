@@ -10,14 +10,14 @@ labels = []
 def make_axes(length):
     r = length / 1000
     d = length - 2
-    x = cylinder(pos=vec(-0.75, 0, 0.2), axis=vec(0, 0, -d), radius=r, color=color.black)
-    y = cylinder(pos=vec(-0.75, 0, 0.2), axis=vec(d, 0, 0), radius=r, color=color.black)
-    z = cylinder(pos=vec(-0.75, 0, 0.2), axis=vec(0, d/2, 0), radius=r, color=color.black)
+    z = cylinder(pos=vec(-0.75, 0, 0.2), axis=vec(0, 0, -d), radius=r, color=color.black)
+    x = cylinder(pos=vec(-0.75, 0, 0.2), axis=vec(d, 0, 0), radius=r, color=color.black)
+    y = cylinder(pos=vec(-0.75, 0, 0.2), axis=vec(0, d/2, 0), radius=r, color=color.black)
     k = 1.02
     h = 0.02 * length
-    text(pos=x.pos + k * x.axis, text='Frequency', height=h, align='center', billboard=True, emissive=True, color=color.black)
-    text(pos=y.pos + k * y.axis, text='Features', height=h, align='center', billboard=True, emissive=True, color=color.black)
-    text(pos=z.pos + k * z.axis, text='Impact', height=h, align='center', billboard=True, emissive=True, color=color.black)
+    text(pos=z.pos + k * z.axis, text='Frequency', height=h, align='center', billboard=True, emissive=True, color=color.black)
+    text(pos=x.pos + k * x.axis, text='Features', height=h, align='center', billboard=True, emissive=True, color=color.black)
+    text(pos=y.pos + k * y.axis, text='Impact', height=h, align='center', billboard=True, emissive=True, color=color.black)
 
 
 class Bar:
@@ -87,9 +87,10 @@ def visualize_attrib_freq_and_impact(tree):
                     linecolor=vector(0, 0, 0),
                     height=10, 
                     linewidth=3, 
-                    border=5, 
+                    border=3, 
                     yoffset=20, 
                     xoffset=0)
+                    
                 labels.append(l)
         else:
             for item in labels:
