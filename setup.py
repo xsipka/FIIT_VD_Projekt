@@ -2,14 +2,15 @@ from vpython import *
 
 
 def setup_scene(title):
-    scene.width = 1200
-    scene.height = 600
-    scene.title = title
-    scene.camera.pos = vector(0, 10, 5)
-    scene.background = color.gray(0.9)
+    s = canvas(width = 1200,
+    height = 600,
+    title = title,
+    #scene.camera.pos = vector(0, 10, 5),
+    background = color.gray(0.9))
+    return s
 
 
-def move_camera(keys):
+def move_camera(keys, scene):
     if 'left' in keys:
         scene.camera.pos -= vector(0.7, 0, 0)
     if 'right' in keys:
@@ -19,3 +20,13 @@ def move_camera(keys):
     if 'up' in keys:
         scene.camera.pos -= vector(0, 0, 0.7)
 
+
+def switch_scene(keys):
+    if '1' in keys:
+        return 1
+    if '2' in keys:
+        return 2
+    if '3' in keys:
+        return 3
+    else:
+        return -1
