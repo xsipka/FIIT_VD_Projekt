@@ -35,7 +35,7 @@ def get_label_text(node, tree):
         text += 'Leaf'
     else:
         text += 'Feature: {feature}\nThreshold: {threshold}'.format(
-            feature=tree.feature_map[node.id],
+            feature=tree.feature_map[node.feature],
             threshold=round(node.threshold, 2)
         )
     
