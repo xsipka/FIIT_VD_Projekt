@@ -13,10 +13,11 @@ if __name__ == "__main__":
 
     curr_scene_id = 1
 
-    while True:   
+    while True:
 
         if curr_scene_id == 1:
             curr_scene = setup.setup_scene("Vizualizácia rozhodovacieho stromu\n")
+            curr_scene.align = "left"
             curr_scene_id = 1
             viz = TreeVisualization(my_tree)
 
