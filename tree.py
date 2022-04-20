@@ -5,26 +5,20 @@ import numpy as np
 import dataloader as loader
 from node import Node
 
-#MAX_DEPTH = 10
-
 
 class Tree:
     def __init__(self, x, y, depth=None):
         self.x = x
         self.y = y
 
-        # if not depth:
-        #     depth = MAX_DEPTH
-        # elif depth > MAX_DEPTH:
-        #     depth = MAX_DEPTH
-
+        self.max_depth = 0
         self.depth = depth
         self.create_sklearn_tree()
         self.create_nodes()
         self.set_parent_nodes()
         self.feature_importance = self.clf.feature_importances_     # zoznam dolezitosti jednotlivych atributov
         self.create_mapping()
-
+        
 
     # create mapping of features and classes
     def create_mapping(self):
@@ -73,6 +67,10 @@ class Tree:
             node_id, parent_depth = stack.pop()
             node_depth[node_id] = parent_depth + 1
             node = Node(node_id, node_depth[node_id], gini[node_id], samples_count[node_id], samples[node_id])
+
+            # set max depth
+            if node_depth[node_id] >= self.max_depth:
+                self.max_depth = node_depth[node_id]
 
             # set child nodes if we have a decision node
             if (left_nodes[node_id] != right_nodes[node_id]):

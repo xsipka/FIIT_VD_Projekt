@@ -77,7 +77,7 @@ class DataflowVisualization:
 
             text = ''
             for i, item in enumerate(classes):
-                text += '<p style="color:rgb({r},{g},{b});">{feature}</p>{counts}'.format(
+                text += '<p style="color:rgb({r},{g},{b});">{feature}: {counts}</p>'.format(
                     feature=tree.class_map[i],
                     r=palette[i][0] * 255,
                     g=palette[i][1] * 255,
