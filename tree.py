@@ -149,3 +149,9 @@ def create_tree(type, depth=None):
     tree = Tree(x, y, depth)
 
     return tree
+
+
+# gets kdd99 dataset
+def get_dataset(type):
+    kdd99 = loader.load_dataset(type)
+    return kdd99
