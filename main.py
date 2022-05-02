@@ -6,10 +6,12 @@ import setup
 from vpython import *
 
 
+
 if __name__ == "__main__":
     depth = 10
 
     my_tree = tree.create_tree('file', depth)
+    kdd = tree.get_dataset('file')
 
     curr_scene_id = 1
 
@@ -19,12 +21,12 @@ if __name__ == "__main__":
             curr_scene = setup.setup_scene("Vizualizácia rozhodovacieho stromu\n")
             curr_scene.align = "left"
             curr_scene_id = 1
-            viz = TreeVisualization(my_tree)
+            viz = TreeVisualization(my_tree, kdd)
 
         if curr_scene_id == 2:
             curr_scene = setup.setup_scene("Tok dát\n")
             curr_scene_id = 2
-            viz = DataflowVisualization(my_tree)
+            viz = DataflowVisualization(my_tree, curr_scene)
 
         if curr_scene_id == 3:
             curr_scene = setup.setup_scene("Vplyv a frekvencia atribútov\n")

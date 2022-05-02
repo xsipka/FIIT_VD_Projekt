@@ -1,15 +1,16 @@
 from vpython import *
+from data_viz import data_viz
 
 # to save all nodes for filtering
 tree_nodes = []
 
 
 class TreeVisualization:
-    def __init__(self, dt):
+    def __init__(self, dt, kdd):
         self.widgets = []
-        self.visualize_tree(dt)
+        self.visualize_tree(dt, kdd)
 
-    def visualize_tree(self, dt):
+    def visualize_tree(self, dt, kdd):
 
         global tree_nodes
         x, y, z = [0, 0, 0]
@@ -233,8 +234,18 @@ class TreeVisualization:
                 for n in tree_nodes:
                     n[3].visible = False
 
+
+        # opens window with dataset visualisation
+        def open_dataset_viz(b):
+            data_viz(kdd)
+
+
         labels = checkbox(bind=show_labels, text='Show node labels\n')
         self.widgets.append(labels)
+
+        b = button(bind=open_dataset_viz, text='Open dataset visualization\n')
+        self.widgets.append(b)
+
 
     # deletes all widgets from the scene
     def delete_widgets(self):

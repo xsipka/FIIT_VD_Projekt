@@ -43,8 +43,9 @@ def get_label_text(node, tree):
 
 
 class DataflowVisualization:
-    def __init__(self, tree):
+    def __init__(self, tree, scene):
         self.widgets = []
+        self.scene = scene
         self.visualize_dataflow(tree)
         
 
@@ -85,6 +86,7 @@ class DataflowVisualization:
                     counts=counts_dict[i])
             
             legend = wtext(text=text)
+            self.scene.append_to_caption(legend)
             self.widgets.append(legend)
 
 
