@@ -14,41 +14,12 @@ class TreeVisualization:
 
         global tree_nodes
         x, y, z = [0, 0, 0]
-        xoffset = 50
         parent_dict = {}
         visualized = []
         all_left_nodes = []
         all_right_nodes = []
         radius = 2
 
-        # def layout(key):
-        #     global xposition
-        #     node_id = dt.nodes_dict[key].id
-        #     node_depth = dt.nodes_dict[key].depth
-        #     parent_id = dt.nodes_dict[key].parent_id
-        #     left_id = dt.nodes_dict[key].left_id
-        #     right_id = dt.nodes_dict[key].right_id
-        #     samples_count = dt.nodes_dict[key].classes_count
-        #     classes = dt.nodes_dict[key].classes
-        #     gini = dt.nodes_dict[key].gini
-        #
-        #     if dt.nodes_dict[key].leaf:
-        #         pass
-        #     else:
-        #         feature = dt.nodes_dict[key].feature
-        #         threshold = dt.nodes_dict[key].threshold
-        #
-        #     if left_id:
-        #         layout(left_id)
-        #
-        #     new_node = cylinder(pos=vector(xposition, 0, node_depth*10), axis=vector(0, 1, 0),
-        #                         radius=radius, color=color.red)
-        #     xposition += 10
-        #
-        #     if right_id:
-        #         layout(right_id)
-        #
-        # layout(0)
         # go through tree node by node
         for key in dt.nodes_dict.keys():
             print(key)
@@ -103,7 +74,7 @@ class TreeVisualization:
                                   color=color_based_on_classes_count(samples_count))
                 lab = label(pos=parent.pos, text=f'Id: {node_id}\nDepth: {node_depth}\n Parent Id: {parent_id}\n '
                             f'Classes count: {samples_count}\nGini: {round(gini, 3)}', color=vector(0, 0, 0),
-                            linecolor=vector(0, 0, 0), linewidth=3, border=10, yoffset=50, xoffset=xoffset, visible=False)
+                            linecolor=vector(0, 0, 0), linewidth=3, border=10, yoffset=50, visible=False)
 
                 visualized.append(node_id)
                 parent_dict[node_id] = parent.pos
@@ -112,17 +83,18 @@ class TreeVisualization:
                 # left root child
                 if left_id:
                     left = dt.nodes_dict[left_id]
-                    left_node = cylinder(pos=parent_dict[left.parent_id] - vector(30, 0, 30), axis=vector(0, 1, 0),
+                    left_node = cylinder(pos=parent_dict[left.parent_id] - vector(200, 0, 60), axis=vector(0, 1, 0),
                                          radius=radius+left.gini*10, color=color_based_on_classes_count(left.classes_count))
                     lab = label(pos=left_node.pos, text=f'Id: {left_id}\nDepth: {left.depth}\n Parent Id: {left.parent_id}\n '
                                 f'Samples count: {left.classes_count}\nGini: {round(left.gini, 3)}', color=vector(0, 0, 0),
-                                linecolor=vector(0, 0, 0), linewidth=3, border=10, yoffset=50, xoffset=xoffset, visible=False)
+                                linecolor=vector(0, 0, 0), linewidth=3, border=10, yoffset=50, visible=False)
 
                     if not left.leaf:
                         parent_dict[left_id] = left_node.pos
 
                     visualized.append(left_id)
-                    c = curve(parent.pos, left_node.pos)
+
+                    c = curve(parent.pos, left_node.pos, color=color.red)
                     text(pos=(parent.pos + left_node.pos) / 2, billboard=True, text='{feature} < {threshold}'.format(
                         feature=dt.feature_map[feature], threshold=round(threshold, 2)), color=color.black)
 
@@ -132,17 +104,17 @@ class TreeVisualization:
                 # right root child
                 if right_id:
                     right = dt.nodes_dict[right_id]
-                    right_node = cylinder(pos=parent_dict[right.parent_id] + vector(30, 0, -30), axis=vector(0, 1, 0),
+                    right_node = cylinder(pos=parent_dict[right.parent_id] + vector(200, 0, -60), axis=vector(0, 1, 0),
                                           radius=radius+right.gini*10, color=color_based_on_classes_count(right.classes_count))
                     lab = label(pos=right_node.pos, text=f'Id: {right_id}\nDepth: {right.depth}\n Parent Id: {right.parent_id}\n '
                                 f'Samples count: {right.classes_count}\nGini: {round(right.gini, 3)}', color=vector(0, 0, 0),
-                                linecolor=vector(0, 0, 0), linewidth=3, border=10, yoffset=50, xoffset=xoffset, visible=False)
+                                linecolor=vector(0, 0, 0), linewidth=3, border=10, yoffset=50, visible=False)
 
                     if not right.leaf:
                         parent_dict[right_id] = right_node.pos
 
                     visualized.append(right_id)
-                    c = curve(parent.pos, right_node.pos)
+                    c = curve(parent.pos, right_node.pos, color=color.green)
                     text(pos=(parent.pos + right_node.pos) / 2, billboard=True, text='{feature} >= {threshold}'.format(
                         feature=dt.feature_map[feature], threshold=round(threshold, 2)), color=color.black)
                     all_right_nodes.append(right_id)
@@ -154,11 +126,13 @@ class TreeVisualization:
                     continue
                 else:
                     if node_id == dt.nodes_dict[parent_id].left_id:
-                        if parent_id in all_right_nodes:
-                            new_node = cylinder(pos=parent_dict[parent_id] - vector(0, 0, 40), axis=vector(0, 1, 0),
-                                                radius=radius+gini*10, color=color_based_on_classes_count(samples_count))
+                        if parent_id == 142:
+                            new_node = cylinder(pos=parent_dict[parent_id] - vector(40, 0, 60),
+                                                axis=vector(0, 1, 0),
+                                                radius=radius + gini * 10,
+                                                color=color_based_on_classes_count(samples_count))
                         else:
-                            new_node = cylinder(pos=parent_dict[parent_id] - vector(40, 0, 40), axis=vector(0, 1, 0),
+                            new_node = cylinder(pos=parent_dict[parent_id] - vector(1200 / pow(node_depth, 2) - 10, 0, 60), axis=vector(0, 1, 0),
                                                 radius=radius+gini*10, color=color_based_on_classes_count(samples_count))
 
                         if not dt.nodes_dict[key].leaf:
@@ -166,18 +140,20 @@ class TreeVisualization:
 
                         lab = label(pos=new_node.pos, text=f'Id: {node_id}\nDepth: {node_depth}\n Parent Id: {parent_id}\n '
                                     f'Samples count: {samples_count}\nGini: {round(gini, 3)}', color=vector(0, 0, 0),
-                                    linecolor=vector(0, 0, 0), linewidth=3, border=10, yoffset=50, xoffset=xoffset, visible=False)
+                                    linecolor=vector(0, 0, 0), linewidth=3, border=10, yoffset=50, visible=False)
 
                         visualized.append(node_id)
                         c = curve(parent_dict[parent_id], new_node.pos)
                         all_left_nodes.append(node_id)
 
                     else:
-                        if parent_id in all_left_nodes:
-                            new_node = cylinder(pos=parent_dict[parent_id] + vector(0, 0, -40), axis=vector(0, 1, 0),
-                                                radius=radius+gini*10, color=color_based_on_classes_count(samples_count))
+                        if parent_id == 142:
+                            new_node = cylinder(pos=parent_dict[parent_id] + vector(40, 0, -60),
+                                                axis=vector(0, 1, 0),
+                                                radius=radius + gini * 10,
+                                                color=color_based_on_classes_count(samples_count))
                         else:
-                            new_node = cylinder(pos=parent_dict[parent_id] + vector(40, 0, -40), axis=vector(0, 1, 0),
+                            new_node = cylinder(pos=parent_dict[parent_id] + vector(1200 / pow(node_depth, 2) + 10, 0, -60), axis=vector(0, 1, 0),
                                                 radius=radius+gini*10, color=color_based_on_classes_count(samples_count))
 
                         if not dt.nodes_dict[key].leaf:
@@ -185,7 +161,7 @@ class TreeVisualization:
 
                         lab = label(pos=new_node.pos, text=f'Id: {node_id}\nDepth: {node_depth}\n Parent Id: {parent_id}\n '
                                     f'Samples count: {samples_count}\nGini: {round(gini, 3)}', color=vector(0, 0, 0),
-                                    linecolor=vector(0, 0, 0), linewidth=3, border=10, yoffset=50, xoffset=xoffset, visible=False)
+                                    linecolor=vector(0, 0, 0), linewidth=3, border=10, yoffset=50, visible=False)
 
                         visualized.append(node_id)
                         c = curve(parent_dict[parent_id], new_node.pos)
