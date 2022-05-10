@@ -95,11 +95,11 @@ class TreeVisualization:
                     visualized.append(left_id)
 
                     c = curve(parent.pos, left_node.pos, color=color.red)
-                    text(pos=(parent.pos + left_node.pos) / 2, billboard=True, text='{feature} < {threshold}'.format(
+                    t = text(pos=(parent.pos + left_node.pos) / 2, billboard=True, text='{feature} < {threshold}'.format(
                         feature=dt.feature_map[feature], threshold=round(threshold, 2)), color=color.black)
 
                     all_left_nodes.append(left_id)
-                    tree_nodes.append((left_node, c, left.depth, lab))
+                    tree_nodes.append((left_node, c, left.depth, lab, t, left_id))
 
                 # right root child
                 if right_id:
@@ -115,10 +115,10 @@ class TreeVisualization:
 
                     visualized.append(right_id)
                     c = curve(parent.pos, right_node.pos, color=color.green)
-                    text(pos=(parent.pos + right_node.pos) / 2, billboard=True, text='{feature} >= {threshold}'.format(
+                    t = text(pos=(parent.pos + right_node.pos) / 2, billboard=True, text='{feature} >= {threshold}'.format(
                         feature=dt.feature_map[feature], threshold=round(threshold, 2)), color=color.black)
                     all_right_nodes.append(right_id)
-                    tree_nodes.append((right_node, c, right.depth, lab))
+                    tree_nodes.append((right_node, c, right.depth, lab, t, right_id))
 
             # all other nodes
             else:
@@ -143,7 +143,10 @@ class TreeVisualization:
                                     linecolor=vector(0, 0, 0), linewidth=3, border=10, yoffset=50, visible=False)
 
                         visualized.append(node_id)
-                        c = curve(parent_dict[parent_id], new_node.pos)
+                        c = curve(parent_dict[parent_id], new_node.pos, color=color.red)
+                        t = text(pos=(parent_dict[parent_id] + new_node.pos) / 2, billboard=True,
+                             text='{feature} < {threshold}'.format(
+                                 feature=dt.feature_map[feature], threshold=round(threshold, 2)), color=color.black)
                         all_left_nodes.append(node_id)
 
                     else:
@@ -164,10 +167,13 @@ class TreeVisualization:
                                     linecolor=vector(0, 0, 0), linewidth=3, border=10, yoffset=50, visible=False)
 
                         visualized.append(node_id)
-                        c = curve(parent_dict[parent_id], new_node.pos)
+                        c = curve(parent_dict[parent_id], new_node.pos, color=color.green)
+                        t = text(pos=(parent_dict[parent_id] + new_node.pos) / 2, billboard=True,
+                             text='{feature} >= {threshold}'.format(
+                                 feature=dt.feature_map[feature], threshold=round(threshold, 2)), color=color.black)
                         all_right_nodes.append(node_id)
 
-                    tree_nodes.append((new_node, c, node_depth, lab))
+                    tree_nodes.append((new_node, c, node_depth, lab, t, node_id))
 
         # filter based on node depth
         def filter_by_depth(m):
@@ -177,9 +183,11 @@ class TreeVisualization:
                     n[0].visible = False
                     n[1].visible = False
                     n[3].visible = False
+                    n[4].visible = False
                 else:
                     n[0].visible = True
                     n[1].visible = True
+                    n[4].visible = True
 
         depth_menu = menu(choices=['Vyber hĺbku stromu', '2', '3', '4', '5', '6', '7', '8', '9', '10'], index=0, bind=filter_by_depth)
         self.widgets.append(depth_menu)

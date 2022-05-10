@@ -43,30 +43,15 @@ def get_label_text(node, tree):
 
 
 class DataflowVisualization:
-    def __init__(self, tree, scene):
+    def __init__(self, tree, scene, node_id):
         self.widgets = []
         self.scene = scene
-        self.visualize_dataflow(tree)
+        self.node_id = node_id
+        self.visualize_dataflow(tree, node_id)
         
 
     # main function for visualising dataflow
-    def visualize_dataflow(self, tree):
-
-        # text field function
-        def select_node(wi):
-            text = wi.text
-            input_id = text.replace('Select node: ', '')
-
-            try:
-                node_id = int(input_id)
-
-                # check validity of node
-                if node_id < tree.node_count and node_id >= 0:
-                    display_dataflow(node_id)
-
-            except Exception as e:
-                print(e)
-
+    def visualize_dataflow(self, tree, node_id):
 
         # displays classes colors and names
         def display_legend(palette, classes, counts_dict):
@@ -88,7 +73,6 @@ class DataflowVisualization:
             legend = wtext(text=text)
             self.scene.append_to_caption(legend)
             self.widgets.append(legend)
-
 
 
         # displays dataflow from root to selected node
@@ -162,14 +146,15 @@ class DataflowVisualization:
         # create axes
         make_axes(50)
 
-        # text field
-        user_input = winput(text='Select node: ', bind=select_node, width=250)
-        self.widgets.append(user_input)
+        # text with selected node id
+        node = wtext(text='Selected node: {node_id}'.format(node_id=node_id))
+        self.widgets.append(node)
 
         # checkbox (turn on/off labels)
         labels = checkbox(bind=print_labels, text='Show node labels')
         self.widgets.append(labels)
 
+        display_dataflow(node_id)
     
     # delets all widgets from the scene
     def delete_widgets(self):
