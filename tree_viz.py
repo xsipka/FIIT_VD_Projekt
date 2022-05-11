@@ -193,15 +193,15 @@ class TreeVisualization:
         self.widgets.append(depth_menu)
 
         # node color legend
-        legend = wtext(text='<p style = "color:purple">počet_tried > 400 000</p>'
-                            '<p style = "color:magenta">počet_tried > 200 000</p>'
-                            '<p style = "color:red">počet_tried > 100 000</p>'
-                            '<p style = "color:orange">počet_tried > 50 000</p>'
-                            '<p style = "color:yellow">počet_tried > 10 000</p>'
-                            '<p style = "color:lime">počet_tried > 5 000</p>'
-                            '<p style = "color:cyan">počet_tried > 1 000</p>'
-                            '<p style = "color:blue">počet_tried > 100</p>'
-                            '<p style = "color:rgb(56,56,56)">počet_tried < 100</p>')
+        legend = wtext(text='<p style = "color:purple">sample count > 400 000</p>'
+                            '<p style = "color:magenta">sample coun > 200 000</p>'
+                            '<p style = "color:red">sample coun > 100 000</p>'
+                            '<p style = "color:orange">sample coun > 50 000</p>'
+                            '<p style = "color:yellow">sample coun > 10 000</p>'
+                            '<p style = "color:lime">sample coun > 5 000</p>'
+                            '<p style = "color:cyan">sample coun > 1 000</p>'
+                            '<p style = "color:blue">sample coun > 100</p>'
+                            '<p style = "color:rgb(56,56,56)">sample coun < 100</p>')
         self.widgets.append(legend)
 
         # show node labels
