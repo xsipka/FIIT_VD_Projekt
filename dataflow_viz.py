@@ -1,6 +1,6 @@
 from vpython import *
 import distinctipy
-
+import math
 
 # some golbal variables
 graph = []
@@ -76,7 +76,7 @@ class DataflowVisualization:
 
 
         # displays dataflow from root to selected node
-        def display_dataflow(node_id):
+        def display_dataflow(node_id, scaling):
             global graph
             global nodes
             global palette
@@ -105,7 +105,13 @@ class DataflowVisualization:
                 # for each node print visualize every clas with samples
                 for i, item in enumerate(classes):
                     if item > 0:
-                        curr = cylinder(pos=vec(x, y, -z), axis=vec(0, item/100, 0), radius=r, color=vec(palette[i][0], palette[i][1], palette[i][2]))
+                        if scaling:
+                            if item == 1.0:
+                                item += 0.01
+                            col_axis = vec(0, math.log(item), 0)
+                        else:
+                            col_axis = vec(0, item/100, 0)
+                        curr = cylinder(pos=vec(x, y, -z), axis=col_axis, radius=r, color=vec(palette[i][0], palette[i][1], palette[i][2]))
                         graph.append(curr)
                         try:
                             counts[i].append(int(item))
@@ -143,18 +149,30 @@ class DataflowVisualization:
                     item.visible = False
 
 
+        # turn on/off logarithmic scaling
+        def log_scaling(c):
+            if c.checked:
+                display_dataflow(node_id, True)
+            else:
+                display_dataflow(node_id, False)
+
+
         # create axes
         make_axes(50)
 
         # text with selected node id
-        node = wtext(text='Selected node: {node_id}'.format(node_id=node_id))
+        node = wtext(text='Selected node: {node_id}\n'.format(node_id=node_id))
         self.widgets.append(node)
 
         # checkbox (turn on/off labels)
-        labels = checkbox(bind=print_labels, text='Show node labels')
+        labels = checkbox(bind=print_labels, text='Show node labels\n')
         self.widgets.append(labels)
 
-        display_dataflow(node_id)
+        # checkbox (turn on/off scaling)
+        scaling = checkbox(bind=log_scaling, text='Logarithmic scaling')
+        self.widgets.append(scaling)
+
+        #display_dataflow(node_id)
     
     # delets all widgets from the scene
     def delete_widgets(self):
