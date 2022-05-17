@@ -1,6 +1,6 @@
 from vpython import *
 import distinctipy
-
+import math
 
 # some golbal variables
 graph = []
@@ -43,15 +43,15 @@ def get_label_text(node, tree):
 
 
 class DataflowVisualization:
-    def __init__(self, tree, scene, node_id):
+    def __init__(self, tree, scene, node_id, root_id):
         self.widgets = []
         self.scene = scene
         self.node_id = node_id
-        self.visualize_dataflow(tree, node_id)
+        self.visualize_dataflow(tree, node_id, root_id)
         
 
     # main function for visualising dataflow
-    def visualize_dataflow(self, tree, node_id):
+    def visualize_dataflow(self, tree, node_id, root_id):
 
         # displays classes colors and names
         def display_legend(palette, classes, counts_dict):
@@ -63,12 +63,16 @@ class DataflowVisualization:
 
             text = ''
             for i, item in enumerate(classes):
-                text += '<p style="color:rgb({r},{g},{b});">{feature}: {counts}</p>'.format(
-                    feature=tree.class_map[i],
-                    r=palette[i][0] * 255,
-                    g=palette[i][1] * 255,
-                    b=palette[i][2] * 255,
-                    counts=counts_dict[i])
+                try:
+                    if counts_dict[i]:
+                        text += '<p style="color:rgb({r},{g},{b});">{feature}: {counts}</p>'.format(
+                            feature=tree.class_map[i],
+                            r=palette[i][0] * 255,
+                            g=palette[i][1] * 255,
+                            b=palette[i][2] * 255,
+                            counts=counts_dict[i])
+                except KeyError:
+                    pass
             
             legend = wtext(text=text)
             self.scene.append_to_caption(legend)
@@ -76,7 +80,7 @@ class DataflowVisualization:
 
 
         # displays dataflow from root to selected node
-        def display_dataflow(node_id):
+        def display_dataflow(node_id, scaling):
             global graph
             global nodes
             global palette
@@ -86,7 +90,7 @@ class DataflowVisualization:
             counts = {}
 
             # get dataflow
-            nodes = tree.get_dataflow(node_id)
+            nodes = tree.get_dataflow(node_id, root_id)
 
             # delete previous visualisation
             for item in graph:
@@ -105,7 +109,13 @@ class DataflowVisualization:
                 # for each node print visualize every clas with samples
                 for i, item in enumerate(classes):
                     if item > 0:
-                        curr = cylinder(pos=vec(x, y, -z), axis=vec(0, item/100, 0), radius=r, color=vec(palette[i][0], palette[i][1], palette[i][2]))
+                        if scaling:
+                            if item == 1.0:
+                                item += 0.01
+                            col_axis = vec(0, math.log(item), 0)
+                        else:
+                            col_axis = vec(0, item/100, 0)
+                        curr = cylinder(pos=vec(x, y, -z), axis=col_axis, radius=r, color=vec(palette[i][0], palette[i][1], palette[i][2]))
                         graph.append(curr)
                         try:
                             counts[i].append(int(item))
@@ -143,18 +153,30 @@ class DataflowVisualization:
                     item.visible = False
 
 
+        # turn on/off logarithmic scaling
+        def log_scaling(c):
+            if c.checked:
+                display_dataflow(node_id, True)
+            else:
+                display_dataflow(node_id, False)
+
+
         # create axes
         make_axes(50)
 
         # text with selected node id
-        node = wtext(text='Selected node: {node_id}'.format(node_id=node_id))
+        node = wtext(text='Selected node: {node_id}\n'.format(node_id=node_id))
         self.widgets.append(node)
 
         # checkbox (turn on/off labels)
-        labels = checkbox(bind=print_labels, text='Show node labels')
+        labels = checkbox(bind=print_labels, text='Show node labels\n')
         self.widgets.append(labels)
 
-        display_dataflow(node_id)
+        # checkbox (turn on/off scaling)
+        scaling = checkbox(bind=log_scaling, text='Logarithmic scaling')
+        self.widgets.append(scaling)
+
+        #display_dataflow(node_id)
     
     # delets all widgets from the scene
     def delete_widgets(self):

@@ -84,7 +84,9 @@ class Tree:
                 is_leaves[node_id] = True
                 node.set_as_leaf()
             
-            #print(node.id, node.depth, node.leaf, node.gini, node.samples)
+            # print(node.id, node.leaf)
+            # if node.leaf == False:
+            #     print("\tKids:", node.left_id, node.right_id)
             self.nodes_dict[node_id] = node
 
 
@@ -108,15 +110,20 @@ class Tree:
 
 
     # returns list of nodes from given node to root
-    def get_dataflow(self, node_id):
+    def get_dataflow(self, node_id, new_root=False):
         node_list = []
 
         if node_id >= self.node_count or node_id < 0:
             return node_list
 
-        while node_id != -1:
-            node_list.append(self.nodes_dict[node_id])
-            node_id = self.nodes_dict[node_id].parent_id
+        if new_root == False:
+            while node_id != -1:
+                node_list.append(self.nodes_dict[node_id])
+                node_id = self.nodes_dict[node_id].parent_id
+        else:
+           while node_id != self.nodes_dict[new_root].parent_id:
+                node_list.append(self.nodes_dict[node_id])
+                node_id = self.nodes_dict[node_id].parent_id 
 
         return node_list
         
@@ -136,6 +143,35 @@ class Tree:
                 features_freq[self.nodes_dict[key].feature] += 1
 
         return features_impact, features_freq
+
+
+    # depth first search (for subtree creation)
+    def dfs(self, visited, node):
+        if node.id not in visited:
+            visited.append(node.id)
+            children = []
+            
+            if node.left_id:
+                children.append(self.nodes_dict[node.left_id])
+            if node.right_id:
+                children.append(self.nodes_dict[node.right_id])
+
+            for child in children:
+                self.dfs(visited, child)
+
+
+    # create subtree where root is selected node
+    def create_subtree(self, node_id):
+        subtree = []
+        root = self.nodes_dict[node_id]
+        self.visited = []
+        self.dfs(self.visited, root)
+
+        for node in self.visited:
+            subtree.append(self.nodes_dict[node])
+            #print(self.nodes_dict[node].id)
+
+        return subtree
 
 
 # loads dataset and creates tree

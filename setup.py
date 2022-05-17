@@ -28,5 +28,7 @@ def switch_scene(keys):
         return 2
     if '3' in keys:
         return 3
+    if '4' in keys:
+        return 4
     else:
         return -1
