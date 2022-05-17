@@ -64,7 +64,7 @@ class SubtreeVisualization:
                 parent = cylinder(pos=vector(x, y, z), axis=vector(0, 1, 0), radius=radius+gini*10,
                                   color=color_based_on_classes_count(samples_count))
                 lab = label(pos=parent.pos, text=f'Id: {node_id}\nDepth: {node_depth}\n Parent Id: {parent_id}\n '
-                            f'Classes count: {samples_count}\nGini: {round(gini, 3)}', color=vector(0, 0, 0),
+                            f'Samples count: {samples_count}\nGini: {round(gini, 3)}', color=vector(0, 0, 0),
                             linecolor=vector(0, 0, 0), linewidth=3, border=10, yoffset=50, visible=False)
 
                 visualized.append(node_id)

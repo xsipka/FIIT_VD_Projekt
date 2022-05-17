@@ -110,15 +110,20 @@ class Tree:
 
 
     # returns list of nodes from given node to root
-    def get_dataflow(self, node_id):
+    def get_dataflow(self, node_id, new_root=False):
         node_list = []
 
         if node_id >= self.node_count or node_id < 0:
             return node_list
 
-        while node_id != -1:
-            node_list.append(self.nodes_dict[node_id])
-            node_id = self.nodes_dict[node_id].parent_id
+        if new_root == False:
+            while node_id != -1:
+                node_list.append(self.nodes_dict[node_id])
+                node_id = self.nodes_dict[node_id].parent_id
+        else:
+           while node_id != self.nodes_dict[new_root].parent_id:
+                node_list.append(self.nodes_dict[node_id])
+                node_id = self.nodes_dict[node_id].parent_id 
 
         return node_list
         

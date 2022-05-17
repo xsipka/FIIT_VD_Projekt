@@ -4,6 +4,7 @@ from tree_viz import tree_nodes
 from dataflow_viz import DataflowVisualization
 from atrib_viz import AttributesVisualization
 from subtree_viz import SubtreeVisualization
+from subtree_viz import tree_nodes as subtree_nodes
 import setup
 from vpython import *
 
@@ -17,32 +18,46 @@ if __name__ == "__main__":
 
     curr_scene_id = 1
     node_id = None
+    root_id = False
+    temp = False
 
     while True:
+        
+        # pick a node using mouse click - then press 2 to show dataflow viz. or 4 to show subtree
+        def get_node():
+            global node_id
+            global root_id
+            global temp
+
+            pick = curr_scene.mouse.pick
+            if pick is not None:
+                
+                if curr_scene_id == 1:
+                    for node in tree_nodes:
+                        if node[0].pos == pick.pos:
+                            node_id = node[5]
+                            pick.emissive = True
+                            temp = node_id
+                            root_id = False
+                else:
+                    for node in subtree_nodes:
+                        if node[0].pos == pick.pos:
+                            node_id = node[5]
+                            pick.emissive = True
+                            root_id = temp
+        
 
         if curr_scene_id == 1:
             curr_scene = setup.setup_scene("Vizualizácia rozhodovacieho stromu\n")
             curr_scene.align = "left"
             curr_scene_id = 1
             viz = TreeVisualization(my_tree, kdd)
-
-            # pick a node using mouse click - then press 2 to show dataflow viz.
-            def get_node():
-                global node_id
-                pick = curr_scene.mouse.pick
-                if pick is not None:
-
-                    for node in tree_nodes:
-                        if node[0].pos == pick.pos:
-                            node_id = node[5]
-                            pick.emissive = True
-
             curr_scene.bind("mousedown", get_node)
 
         if curr_scene_id == 2:
             curr_scene = setup.setup_scene("Tok dát\n")
             curr_scene_id = 2
-            viz = DataflowVisualization(my_tree, curr_scene, node_id)
+            viz = DataflowVisualization(my_tree, curr_scene, node_id, root_id)
 
         if curr_scene_id == 3:
             curr_scene = setup.setup_scene("Vplyv a frekvencia atribútov\n")
@@ -51,8 +66,10 @@ if __name__ == "__main__":
 
         if curr_scene_id == 4:
             curr_scene = setup.setup_scene("Vizualizácia zvoleného podstromu\n")
+            curr_scene.align = "left"
             curr_scene_id = 4
             viz = SubtreeVisualization(my_tree, node_id)
+            curr_scene.bind("mousedown", get_node)
 
         while True:
             rate(30)
