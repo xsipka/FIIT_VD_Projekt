@@ -43,15 +43,15 @@ def get_label_text(node, tree):
 
 
 class DataflowVisualization:
-    def __init__(self, tree, scene, node_id):
+    def __init__(self, tree, scene, node_id, root_id):
         self.widgets = []
         self.scene = scene
         self.node_id = node_id
-        self.visualize_dataflow(tree, node_id)
+        self.visualize_dataflow(tree, node_id, root_id)
         
 
     # main function for visualising dataflow
-    def visualize_dataflow(self, tree, node_id):
+    def visualize_dataflow(self, tree, node_id, root_id):
 
         # displays classes colors and names
         def display_legend(palette, classes, counts_dict):
@@ -63,12 +63,16 @@ class DataflowVisualization:
 
             text = ''
             for i, item in enumerate(classes):
-                text += '<p style="color:rgb({r},{g},{b});">{feature}: {counts}</p>'.format(
-                    feature=tree.class_map[i],
-                    r=palette[i][0] * 255,
-                    g=palette[i][1] * 255,
-                    b=palette[i][2] * 255,
-                    counts=counts_dict[i])
+                try:
+                    if counts_dict[i]:
+                        text += '<p style="color:rgb({r},{g},{b});">{feature}: {counts}</p>'.format(
+                            feature=tree.class_map[i],
+                            r=palette[i][0] * 255,
+                            g=palette[i][1] * 255,
+                            b=palette[i][2] * 255,
+                            counts=counts_dict[i])
+                except KeyError:
+                    pass
             
             legend = wtext(text=text)
             self.scene.append_to_caption(legend)
@@ -86,7 +90,7 @@ class DataflowVisualization:
             counts = {}
 
             # get dataflow
-            nodes = tree.get_dataflow(node_id)
+            nodes = tree.get_dataflow(node_id, root_id)
 
             # delete previous visualisation
             for item in graph:
