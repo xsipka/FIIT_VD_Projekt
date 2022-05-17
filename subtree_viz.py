@@ -5,9 +5,11 @@ from vpython import *
 
 
 class SubtreeVisualization:
-    def __init__(self, tree):
+    def __init__(self, tree, root):
         self.widgets = []
-        self.visualize_tree(tree)
+        nodes = tree.create_subtree(root)
+        print(nodes)
+        self.visualize_tree(nodes)
 
-    def visualize_tree(self, tree):
+    def visualize_tree(self, nodes):
         pass

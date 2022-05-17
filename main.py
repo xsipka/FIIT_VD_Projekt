@@ -3,6 +3,7 @@ from tree_viz import TreeVisualization
 from tree_viz import tree_nodes
 from dataflow_viz import DataflowVisualization
 from atrib_viz import AttributesVisualization
+from subtree_viz import SubtreeVisualization
 import setup
 from vpython import *
 
@@ -16,7 +17,6 @@ if __name__ == "__main__":
 
     curr_scene_id = 1
     node_id = None
-    my_tree.create_subtree(3)
 
     while True:
 
@@ -52,7 +52,7 @@ if __name__ == "__main__":
         if curr_scene_id == 4:
             curr_scene = setup.setup_scene("Vizualizácia zvoleného podstromu\n")
             curr_scene_id = 4
-            viz = AttributesVisualization(my_tree)
+            viz = SubtreeVisualization(my_tree, node_id)
 
         while True:
             rate(30)
