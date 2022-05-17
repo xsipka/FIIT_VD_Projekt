@@ -16,6 +16,7 @@ if __name__ == "__main__":
 
     curr_scene_id = 1
     node_id = None
+    my_tree.create_subtree(3)
 
     while True:
 
@@ -46,6 +47,11 @@ if __name__ == "__main__":
         if curr_scene_id == 3:
             curr_scene = setup.setup_scene("Vplyv a frekvencia atribútov\n")
             curr_scene_id = 3
+            viz = AttributesVisualization(my_tree)
+
+        if curr_scene_id == 4:
+            curr_scene = setup.setup_scene("Vizualizácia zvoleného podstromu\n")
+            curr_scene_id = 4
             viz = AttributesVisualization(my_tree)
 
         while True:
