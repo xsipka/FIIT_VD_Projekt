@@ -18,6 +18,7 @@ if __name__ == "__main__":
 
     curr_scene_id = 1
     node_id = None
+    last_pick = None
     root_id = False
     temp = False
 
@@ -25,12 +26,15 @@ if __name__ == "__main__":
         
         # pick a node using mouse click - then press 2 to show dataflow viz. or 4 to show subtree
         def get_node():
-            global node_id
-            global root_id
-            global temp
+            global node_id, last_pick, root_id, temp
+
+            if last_pick is not None:
+                    last_pick.emissive = False
+                    last_pick = None
 
             pick = curr_scene.mouse.pick
             if pick is not None:
+                last_pick = pick
                 
                 if curr_scene_id == 1:
                     for node in tree_nodes:
