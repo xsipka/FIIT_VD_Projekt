@@ -19,6 +19,8 @@ class TreeVisualization:
         all_left_nodes = []
         all_right_nodes = []
         radius = 2
+        max_classes = 0
+        min_classes = 1
 
         # go through tree node by node
         for key in dt.nodes_dict.keys():
@@ -68,6 +70,9 @@ class TreeVisualization:
 
                 return col
 
+            def scale_number(unscaled, to_min, to_max, from_min, from_max):
+                return (to_max - to_min) * (unscaled - from_min) / (from_max - from_min) + to_min
+
             # root node
             if node_depth == 0:
                 parent = cylinder(pos=vector(x, y, z), axis=vector(0, 1, 0), radius=radius+gini*10,
@@ -76,7 +81,16 @@ class TreeVisualization:
                             f'Classes count: {samples_count}\nGini: {round(gini, 3)}', color=vector(0, 0, 0),
                             linecolor=vector(0, 0, 0), linewidth=3, border=10, yoffset=50, visible=False)
 
-                visualized.append(node_id)
+                max_classes = samples_count
+
+                length_left = scale_number(dt.nodes_dict[left_id].classes_count, 5, 200, min_classes, max_classes)
+                b_left = box(pos=parent.pos - vector(0.75, -length_left/2, 0), axis=vector(0, 1, 0), length=length_left,
+                             color=color_based_on_classes_count(dt.nodes_dict[left_id].classes_count))
+
+                length_right = scale_number(dt.nodes_dict[right_id].classes_count, 5, 200, min_classes, max_classes)
+                b_right = box(pos=parent.pos + vector(0.75, length_right / 2, 0), axis=vector(0, 1, 0), length=length_right,
+                              color=color_based_on_classes_count(dt.nodes_dict[right_id].classes_count))
+
                 parent_dict[node_id] = parent.pos
                 tree_nodes.append((parent, None, node_depth, lab))
 
@@ -92,6 +106,17 @@ class TreeVisualization:
                     if not left.leaf:
                         parent_dict[left_id] = left_node.pos
 
+                        length_left = scale_number(dt.nodes_dict[left.left_id].classes_count, 5, 200, min_classes, max_classes)
+                        b_left = box(pos=left_node.pos - vector(0.75, -length_left / 2, 0), axis=vector(0, 1, 0),
+                                     length=length_left,
+                                     color=color_based_on_classes_count(dt.nodes_dict[left.left_id].classes_count))
+
+                        length_right = scale_number(dt.nodes_dict[left.right_id].classes_count, 5, 200, min_classes,
+                                                    max_classes)
+                        b_right = box(pos=left_node.pos + vector(0.75, length_right / 2, 0), axis=vector(0, 1, 0),
+                                      length=length_right,
+                                      color=color_based_on_classes_count(dt.nodes_dict[left.right_id].classes_count))
+
                     visualized.append(left_id)
 
                     c = curve(parent.pos, left_node.pos, color=color.red)
@@ -99,7 +124,7 @@ class TreeVisualization:
                         feature=dt.feature_map[feature], threshold=round(threshold, 2)), color=color.black)
 
                     all_left_nodes.append(left_id)
-                    tree_nodes.append((left_node, c, left.depth, lab, t, left_id))
+                    tree_nodes.append((left_node, c, left.depth, lab, t, left_id, b_left, b_right))
 
                 # right root child
                 if right_id:
@@ -113,12 +138,24 @@ class TreeVisualization:
                     if not right.leaf:
                         parent_dict[right_id] = right_node.pos
 
+                        length_left = scale_number(dt.nodes_dict[right.left_id].classes_count, 5, 200, min_classes,
+                                                   max_classes)
+                        b_left = box(pos=right_node.pos - vector(0.75, -length_left / 2, 0), axis=vector(0, 1, 0),
+                                     length=length_left,
+                                     color=color_based_on_classes_count(dt.nodes_dict[right.left_id].classes_count))
+
+                        length_right = scale_number(dt.nodes_dict[right.right_id].classes_count, 5, 200, min_classes,
+                                                    max_classes)
+                        b_right = box(pos=right_node.pos + vector(0.75, length_right / 2, 0), axis=vector(0, 1, 0),
+                                      length=length_right,
+                                      color=color_based_on_classes_count(dt.nodes_dict[right.right_id].classes_count))
+
                     visualized.append(right_id)
                     c = curve(parent.pos, right_node.pos, color=color.green)
                     t = text(pos=(parent.pos + right_node.pos) / 2, billboard=True, text='{feature} >= {threshold}'.format(
                         feature=dt.feature_map[feature], threshold=round(threshold, 2)), color=color.black)
                     all_right_nodes.append(right_id)
-                    tree_nodes.append((right_node, c, right.depth, lab, t, right_id))
+                    tree_nodes.append((right_node, c, right.depth, lab, t, right_id, b_left, b_right))
 
             # all other nodes
             else:
@@ -137,6 +174,16 @@ class TreeVisualization:
 
                         if not dt.nodes_dict[key].leaf:
                             parent_dict[node_id] = new_node.pos
+
+                            length_left = scale_number(dt.nodes_dict[left_id].classes_count, 5, 200, min_classes, max_classes)
+                            b_left = box(pos=new_node.pos - vector(0.75, -length_left / 2, 0), axis=vector(0, 1, 0),
+                                         length=length_left,
+                                         color=color_based_on_classes_count(dt.nodes_dict[left_id].classes_count))
+
+                            length_right = scale_number(dt.nodes_dict[right_id].classes_count, 5, 200, min_classes, max_classes)
+                            b_right = box(pos=new_node.pos + vector(0.75, length_right / 2, 0), axis=vector(0, 1, 0),
+                                          length=length_right,
+                                          color=color_based_on_classes_count(dt.nodes_dict[right_id].classes_count))
 
                         lab = label(pos=new_node.pos, text=f'Id: {node_id}\nDepth: {node_depth}\n Parent Id: {parent_id}\n '
                                     f'Samples count: {samples_count}\nGini: {round(gini, 3)}', color=vector(0, 0, 0),
@@ -162,6 +209,18 @@ class TreeVisualization:
                         if not dt.nodes_dict[key].leaf:
                             parent_dict[node_id] = new_node.pos
 
+                            length_left = scale_number(dt.nodes_dict[left_id].classes_count, 5, 200, min_classes,
+                                                       max_classes)
+                            b_left = box(pos=new_node.pos - vector(0.75, -length_left / 2, 0), axis=vector(0, 1, 0),
+                                         length=length_left,
+                                         color=color_based_on_classes_count(dt.nodes_dict[left_id].classes_count))
+
+                            length_right = scale_number(dt.nodes_dict[right_id].classes_count, 5, 200, min_classes,
+                                                        max_classes)
+                            b_right = box(pos=new_node.pos + vector(0.75, length_right / 2, 0), axis=vector(0, 1, 0),
+                                          length=length_right,
+                                          color=color_based_on_classes_count(dt.nodes_dict[right_id].classes_count))
+
                         lab = label(pos=new_node.pos, text=f'Id: {node_id}\nDepth: {node_depth}\n Parent Id: {parent_id}\n '
                                     f'Samples count: {samples_count}\nGini: {round(gini, 3)}', color=vector(0, 0, 0),
                                     linecolor=vector(0, 0, 0), linewidth=3, border=10, yoffset=50, visible=False)
@@ -173,7 +232,7 @@ class TreeVisualization:
                                  feature=dt.feature_map[feature], threshold=round(threshold, 2)), color=color.black)
                         all_right_nodes.append(node_id)
 
-                    tree_nodes.append((new_node, c, node_depth, lab, t, node_id))
+                    tree_nodes.append((new_node, c, node_depth, lab, t, node_id, b_left, b_right))
 
         # filter based on node depth
         def filter_by_depth(m):
@@ -184,10 +243,14 @@ class TreeVisualization:
                     n[1].visible = False
                     n[3].visible = False
                     n[4].visible = False
+                    n[6].visible = False
+                    n[7].visible = False
                 else:
                     n[0].visible = True
                     n[1].visible = True
                     n[4].visible = True
+                    n[6].visible = True
+                    n[7].visible = True
 
         depth_menu = menu(choices=['Vyber hĺbku stromu', '2', '3', '4', '5', '6', '7', '8', '9', '10'], index=0, bind=filter_by_depth)
         self.widgets.append(depth_menu)

@@ -80,7 +80,7 @@ if __name__ == "__main__":
             k = keysdown()
             setup.move_camera(k, curr_scene)
             new_scene = setup.switch_scene(k)
-            if new_scene != curr_scene_id and new_scene != -1 and node_id is not None:
+            if new_scene != curr_scene_id and new_scene != -1:
                 curr_scene_id = new_scene
                 curr_scene.title = ''
                 curr_scene.delete()
